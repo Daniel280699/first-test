@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="mystyle.css">
+    <link rel="stylesheet" href="js/bootstrap.bundle.min.js">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="parent-center">
+        <div id="inputs" class="input-div">
+            <div>
+                <h1><strong>WELCOME SHOPERS!</strong></h1>
+                <p><strong>Here you can buy all of your favorite item's</strong></p>
+            </div>
+            <hr class="hr">
+            <form id="myForm" action="url" method="get">
+                <label for="items">Choose a category:</label>
+                <select name="items" id="itemCategory" oninput="validity.valid">
+                    <option value="drinks">Drinks</option>
+                    <option value="meat">Meat</option>
+                    <option value="dairy">Dairy</option>
+                    <option value="snacks">Snacks</option>
+                    <option value="basic">Basic</option>
+                </select>
+                <br><br>
+                Enter your item: <input id="itemName" required type="text" oninput="validity.valid"><br><br>
+                Enter the item's price: <input id="itemPrice" required type="number" oninput="validity.valid"><br><br>
+                Enter the item's image: <input id="itemImg" required oninput="validity.valid"><br><br>
+                <button type="button" onclick="addItem()" class="btn btn-warning">Click me to add</button>
+            </form>
+        </div>
+        <!-- div(s) for items cards -->
+        <div id="itemsCards">
+        </div>
+        <br>
+        <!-- see items profile -->
+        <div id="retreiveItem" class="input-div">
+            <p>Get your item</p>
+            <input id="nameForRestore" class="input" type="text" placeholder="Enter your item's name again">
+            <button type="button" onclick="getItem()" class="btn btn-info">See your item</button><br><br>
+        </div>
+        <div id="restoredCard">
+        </div>
+        <!-- show all items -->
+        <div id="divCart">
+            <button type="button" onclick="seeAllItems()" class="btn btn-info">See all of your items</button>
+        </div>
+        <div id="allItem" class="input-div">
+        </div>
+    </div>
+    <script>
+
+        // function for adding a item
+        const cardDiv = document.getElementById("itemsCards")
+
+        function addItem() {
+            if (itemName.value != "" && itemPrice.value != 0 && itemImg.value != "") {
+
+                const itemArr = [];
+                itemArr.push({
+                    name: itemName.value,
+                    price: itemPrice.value,
+                    image: itemImg.value,
+                    category: itemCategory.value
+                })
+                localStorage.setItem(itemName.value, JSON.stringify(itemArr))
+
+                // creating the card function
+                cardDiv.innerHTML = `<br><h1>Your item</h1>
+        <div class="card" style="margin:6% auto; width: 18rem; ">
+        <img src ="${itemImg.value}" class="card-img-top" alt="...">
+        <div class="card-body">
+        <h3 class="card-title">${itemName.value}</h3>
+        <p class="card-text">price : ${itemPrice.value} <br>The item's category is : ${itemCategory.value}</p>
+        </div>
+        </div>`
+                console.log(itemArr)
+            }
+        }
+
+        // getting items profile function
+        const nameForRestore = document.getElementById("nameForRestore")
+        const restoredCard = document.getElementById("restoredCard")
+
+
+        function getItem() {
+            const restoreArr = JSON.parse(localStorage.getItem(nameForRestore.value))
+            if (restoreArr != null) {
+                console.log(restoreArr[0].name)
+            } else { console.log("empty") }
+
+            restoredCard.innerHTML = `<br><h1>Your item</h1>
+        <div class="card" style="margin:6% auto; width: 18rem; ">
+        <img src ="${itemImg.value}" class="card-img-top" alt="...">
+        <div class="card-body">
+        <h3 class="card-title">${restoreArr[0].name}</h3>
+        <p class="card-text">price : ${restoreArr[0].price} <br>The item's category is : ${restoreArr[0].category}</p>
+        </div>
+        </div>`
+        }
+        // see all items
+        const seeAll = document.getElementById("allItem")
+        function seeAllItems() {
+
+            seeAll.innerHTML = ""
+            for (let index = 0; index <= 100; index++) {
+                const key = localStorage.key(index)
+                console.log(key)
+                if (key != null) {
+                    let item = JSON.parse(localStorage.getItem(key))
+                    console.log(item[0].name)
+                    seeAll.innerHTML += `<div class="card " style=" width: auto;">
+                 <img src="${itemImg.value}" class="card-img-top" alt="...">
+                 <div class="card-body">
+                 <h5 class="card-title">${item[0].name}</h5>
+                 <p class="card-text">price : ${item[0].price} <br>The item's category is : ${item[0].category}</p>
+                 </div>
+                 </div>`
+                }
+
+                ;
+            }
+            document.getElementById("myForm").reset();
+        }
+        
+
+
+
+
+    </script>
+</body>
+
+</html>
